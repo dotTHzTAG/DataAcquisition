@@ -44,7 +44,6 @@ Menlo Systems ScanControl must be running and its remote interface must be avail
 - `catx/`: models, repositories, services, and ScanControl integration
 - `ui/`: PyQt6 controllers and Designer `.ui` files
 - `resources/`: application icons
-- `tests/`: automated tests
 - `projects/`: local dotTHz project files
 
 Release metadata is stored in `version.json`.

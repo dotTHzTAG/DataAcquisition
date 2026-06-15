@@ -14,14 +14,5 @@ dependencies = [
     "matplotlib>=3.8",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7",
-]
-
 [project.scripts]
 data-acquisition = "main:main"
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["."]

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from PyQt6 import uic
 from PyQt6.QtCore import QThread, Qt, pyqtSignal
+from PyQt6.QtGui import QDoubleValidator
 from PyQt6.QtWidgets import (
     QComboBox,
     QFileDialog,
@@ -508,6 +509,7 @@ class AcquisitionMainWindow(QMainWindow):
             category = self._editable_combo(self.METADATA_CATEGORIES)
             unit = self._editable_combo(())
             value = QLineEdit(self.tableWidget)
+            value.setValidator(QDoubleValidator(value))
 
             self.tableWidget.setCellWidget(index, 1, target)
             self.tableWidget.setCellWidget(index, 2, category)
@@ -654,7 +656,11 @@ class AcquisitionMainWindow(QMainWindow):
         except ValueError as exc:
             QMessageBox.warning(self, "Acquisition settings", str(exc))
             return
-        attributes = self._measurement_attributes(plan)
+        try:
+            attributes = self._measurement_attributes(plan)
+        except ValueError as exc:
+            QMessageBox.warning(self, "Measurement metadata", str(exc))
+            return
         reference = (
             self.reference_waveform.copy()
             if self.reference_waveform is not None
@@ -754,14 +760,11 @@ class AcquisitionMainWindow(QMainWindow):
         return attributes
 
     @staticmethod
-    def _metadata_value(value: str):
+    def _metadata_value(value: str) -> float:
         try:
-            return int(value)
+            return float(value)
         except ValueError:
-            try:
-                return float(value)
-            except ValueError:
-                return value
+            raise ValueError(f"Metadata value must be a number: {value!r}") from None
 
     def _acquisition_progress(self, progress) -> None:
         try:
