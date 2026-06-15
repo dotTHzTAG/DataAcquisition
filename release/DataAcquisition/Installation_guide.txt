@@ -1,0 +1,33 @@
+CaTx Installation Guide
+=======================
+
+Requirements
+------------
+- Windows with Python 3.9 or newer
+- Menlo Systems ScanControl for live acquisition
+
+Installation
+------------
+1. Open PowerShell in the CaTx project directory.
+2. Install dependencies:
+
+   python -m pip install -r requirements.txt
+
+3. Start the application:
+
+   python main.py
+
+ScanControl
+-----------
+Before connecting from CaTx, start Menlo Systems ScanControl and ensure its
+remote interface is available at the configured host and port.
+
+Release Information
+-------------------
+Version, release date, and build information are stored in version.json and
+displayed in the application's About dialogs.
+
+Legacy Material
+---------------
+Retired MATLAB sources, generated applications, old remote-control examples,
+and migration-era configuration files are archived under the legacy folder.

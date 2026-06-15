@@ -1,0 +1,7 @@
+PyQt6==6.9.1
+PyQt6-Qt6==6.9.2
+numpy>=1.23
+websockets>=10
+nest-asyncio>=1.5
+h5py>=3.8
+matplotlib>=3.8

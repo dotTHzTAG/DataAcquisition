@@ -1,0 +1,25 @@
+2026-06-15 15:37:55,932 INFO catx: Data acquisition application started
+2026-06-15 15:38:05,750 INFO catx: Applied user and spectrometer selection; no project is open
+2026-06-15 15:38:18,333 INFO catx: Data acquisition application started
+2026-06-15 15:38:32,844 INFO catx: Created project C:\Users\Jongmin Lee\Desktop\test003.thz
+2026-06-15 15:38:37,903 INFO catx: Updated project user and spectrometer information
+2026-06-15 15:38:54,639 INFO catx: Profile manager closed without applying changes
+2026-06-15 15:39:01,749 INFO catx: Data acquisition application started
+2026-06-15 15:39:11,964 INFO catx: Data acquisition application started
+2026-06-15 15:40:25,855 INFO catx: Created project C:\Users\Jongmin Lee\Desktop\test004.thz
+2026-06-15 15:40:35,117 INFO catx: Updated project user and spectrometer information
+2026-06-15 15:40:54,838 INFO catx: Connecting to Menlo Systems ScanControl
+2026-06-15 15:40:55,110 INFO catx: ScanControl connected; status: Idle
+2026-06-15 15:40:57,502 INFO catx: Baseline acquisition started
+2026-06-15 15:40:59,577 INFO catx: Baseline acquisition completed: 1 waveform(s)
+2026-06-15 15:41:00,420 INFO catx: Reference acquisition started
+2026-06-15 15:41:02,476 INFO catx: Reference acquisition completed: 1 waveform(s)
+2026-06-15 15:41:31,409 INFO catx: Sample acquisition started
+2026-06-15 15:41:33,893 INFO catx: Sample acquisition completed: 10 waveform(s)
+2026-06-15 15:42:30,185 INFO catx: Opened data manager
+2026-06-15 15:44:03,898 INFO catx: Reset project data in C:\Users\Jongmin Lee\Desktop\test004.thz; removed 10 measurement(s)
+2026-06-15 15:44:10,917 INFO catx: Sample acquisition started
+2026-06-15 15:44:37,881 INFO catx: Data acquisition application started
+2026-06-15 15:44:46,872 INFO catx: Opened project C:\Users\Jongmin Lee\Desktop\test004.thz
+2026-06-15 15:44:49,251 INFO catx: Opened data manager
+2026-06-15 16:38:06,246 INFO catx: Data acquisition application started
