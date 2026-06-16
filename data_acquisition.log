@@ -38,3 +38,24 @@
 2026-06-15 20:03:02,420 INFO catx: Opened data manager
 2026-06-15 20:07:24,083 INFO catx: Data acquisition application started
 2026-06-15 20:07:26,385 INFO catx: Opened data manager
+2026-06-15 23:09:49,716 INFO catx: Data acquisition application started
+2026-06-15 23:10:02,583 INFO catx: Opened data manager
+2026-06-15 23:17:21,754 INFO catx: Data acquisition application started
+2026-06-15 23:17:27,585 INFO catx: Opened data manager
+2026-06-15 23:26:55,717 INFO catx: Data acquisition application started
+2026-06-15 23:27:01,446 INFO catx: Opened data manager
+2026-06-15 23:35:39,617 INFO catx: Data acquisition application started
+2026-06-15 23:35:43,368 INFO catx: Opened data manager
+2026-06-15 23:47:42,475 INFO catx: Data acquisition application started
+2026-06-15 23:55:33,187 INFO catx: Data acquisition application started
+2026-06-15 23:56:22,541 INFO catx: Created project C:\Users\Jongmin Lee\Desktop\test01.thz
+2026-06-15 23:56:25,787 INFO catx: Updated project user and spectrometer information
+2026-06-15 23:56:27,567 INFO catx: Connecting to Menlo Systems ScanControl
+2026-06-15 23:56:27,821 INFO catx: ScanControl connected; status: Idle
+2026-06-15 23:56:29,452 INFO catx: Baseline acquisition started
+2026-06-15 23:56:31,523 INFO catx: Baseline acquisition completed: 1 waveform(s)
+2026-06-15 23:56:33,213 INFO catx: Reference acquisition started
+2026-06-15 23:56:35,284 INFO catx: Reference acquisition completed: 1 waveform(s)
+2026-06-15 23:57:03,941 INFO catx: Sample acquisition started
+2026-06-15 23:58:04,009 INFO catx: Sample acquisition completed: 240 waveform(s)
+2026-06-15 23:58:21,004 INFO catx: Opened data manager

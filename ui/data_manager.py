@@ -120,6 +120,7 @@ class DataManagerWindow(QMainWindow):
         self.treeView_groups.selectionModel().currentChanged.connect(
             self._tree_selection_changed
         )
+        self.tabWidget.currentChanged.connect(self._refresh_selection_view)
         self.radioButton_waveform.toggled.connect(self._refresh_current_plot)
         self.radioButton_spectrum.toggled.connect(self._refresh_current_plot)
         self.checkBox_subtract_baseline.toggled.connect(self._refresh_current_plot)
@@ -250,6 +251,10 @@ class DataManagerWindow(QMainWindow):
         return item
 
     def _tree_selection_changed(self, current, _previous) -> None:
+        self._refresh_selection_view()
+
+    def _refresh_selection_view(self, _index: int | None = None) -> None:
+        current = self.treeView_groups.currentIndex()
         if not current.isValid() or self.project_path is None:
             return
         path = current.data(self.HDF5_PATH_ROLE)
@@ -259,7 +264,7 @@ class DataManagerWindow(QMainWindow):
         try:
             with h5py.File(self.project_path, "r") as handle:
                 hdf5_object = handle[path]
-                if item_type in {"file", "group"}:
+                if self.tabWidget.currentWidget() == self.attributes:
                     self.current_attribute_group_path = (
                         hdf5_object.name if item_type == "group" else None
                     )
@@ -267,14 +272,17 @@ class DataManagerWindow(QMainWindow):
                         hdf5_object.attrs,
                         editable=item_type == "group",
                     )
-                    self.tabWidget.setCurrentWidget(self.attributes)
-                elif item_type == "dataset":
-                    self.current_attribute_group_path = None
-                    self._show_attributes(hdf5_object.attrs, editable=False)
-                    parent = hdf5_object.parent
-                    self.current_plot_group_path = parent.name
-                    self._plot_group_datasets(parent)
-                    self.tabWidget.setCurrentWidget(self.datasets)
+                elif self.tabWidget.currentWidget() == self.datasets:
+                    if item_type == "group":
+                        self.current_plot_group_path = hdf5_object.name
+                        self._plot_group_datasets(hdf5_object)
+                    elif item_type == "dataset":
+                        parent = hdf5_object.parent
+                        self.current_plot_group_path = parent.name
+                        self._plot_group_datasets(parent)
+                    else:
+                        self.current_plot_group_path = None
+                        self._clear_plot()
         except (OSError, KeyError, ValueError) as exc:
             self.statusbar.showMessage(f"Could not read selection: {exc}")
 
@@ -437,14 +445,17 @@ class DataManagerWindow(QMainWindow):
             if subtract_baseline and name == "ds3":
                 continue
             data = datasets[name]
-            if data.ndim != 2 or data.shape[0] < 2:
+            waveform = self._waveform_components(data)
+            if waveform is None:
                 continue
-            time_axis = np.asarray(data[0], dtype=np.float64)
-            amplitude = np.asarray(data[1], dtype=np.float64)
+            time_axis, amplitude = waveform
             label = descriptions[index].strip() if index < len(descriptions) else name
             if baseline is not None and name in {"ds1", "ds2"}:
-                if self._compatible_waveforms(data, baseline):
-                    amplitude = amplitude - np.asarray(baseline[1], dtype=np.float64)
+                baseline_waveform = self._waveform_components(baseline)
+                if baseline_waveform is not None and self._same_axis(
+                    time_axis, baseline_waveform[0]
+                ):
+                    amplitude = amplitude - baseline_waveform[1]
                     label += " - Baseline"
                 else:
                     self.statusbar.showMessage(
@@ -499,14 +510,29 @@ class DataManagerWindow(QMainWindow):
         return frequency_thz, magnitude
 
     @staticmethod
-    def _compatible_waveforms(first: np.ndarray, second: np.ndarray) -> bool:
-        return (
-            first.ndim == 2
-            and second.ndim == 2
-            and first.shape[0] >= 2
-            and second.shape[0] >= 2
-            and first.shape[1] == second.shape[1]
-        )
+    def _waveform_components(data: np.ndarray) -> tuple[np.ndarray, np.ndarray] | None:
+        if data.ndim != 2:
+            return None
+        if data.shape[1] == 2 and data.shape[0] != 2:
+            return (
+                np.asarray(data[:, 0], dtype=np.float64),
+                np.asarray(data[:, 1], dtype=np.float64),
+            )
+        if data.shape[0] >= 2:
+            return (
+                np.asarray(data[0], dtype=np.float64),
+                np.asarray(data[1], dtype=np.float64),
+            )
+        if data.shape[1] >= 2:
+            return (
+                np.asarray(data[:, 0], dtype=np.float64),
+                np.asarray(data[:, 1], dtype=np.float64),
+            )
+        return None
+
+    @staticmethod
+    def _same_axis(first: np.ndarray, second: np.ndarray) -> bool:
+        return first.shape == second.shape and np.allclose(first, second)
 
     def _clear_plot(self) -> None:
         if self.plot_canvas is None:

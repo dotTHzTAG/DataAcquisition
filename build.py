@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 BUILD_DIR = ROOT / "build"
 RELEASE_DIR = ROOT / "release"
+DIST_DIR = BUILD_DIR / "dist"
 PRODUCT_NAME = "DataAcquisition"
 
 
@@ -20,7 +21,7 @@ def require_files(paths: list[Path]) -> None:
 
 
 def run_pyinstaller() -> Path:
-    application_dir = RELEASE_DIR / PRODUCT_NAME
+    application_dir = DIST_DIR / PRODUCT_NAME
     icon = ROOT / "resources" / "icon.ico"
     data_files = [
         (ROOT / "ui", "ui"),
@@ -45,7 +46,7 @@ def run_pyinstaller() -> Path:
         "--icon",
         str(icon),
         "--distpath",
-        str(RELEASE_DIR),
+        str(DIST_DIR),
         "--workpath",
         str(BUILD_DIR / "pyinstaller"),
         "--specpath",
@@ -68,6 +69,19 @@ def run_pyinstaller() -> Path:
     return application_dir
 
 
+def create_release_archive(application_dir: Path) -> Path:
+    archive_path = RELEASE_DIR / f"{PRODUCT_NAME}.zip"
+    archive_path.unlink(missing_ok=True)
+    shutil.make_archive(
+        str(archive_path.with_suffix("")),
+        "zip",
+        root_dir=DIST_DIR,
+        base_dir=PRODUCT_NAME,
+    )
+    shutil.rmtree(DIST_DIR)
+    return archive_path
+
+
 def main() -> int:
     try:
         import PyInstaller  # noqa: F401
@@ -80,13 +94,16 @@ def main() -> int:
         return 1
 
     shutil.rmtree(BUILD_DIR, ignore_errors=True)
-    shutil.rmtree(RELEASE_DIR / PRODUCT_NAME, ignore_errors=True)
+    release_application_dir = RELEASE_DIR / PRODUCT_NAME
+    if release_application_dir.exists():
+        shutil.rmtree(release_application_dir)
     BUILD_DIR.mkdir(exist_ok=True)
     RELEASE_DIR.mkdir(exist_ok=True)
 
     application_dir = run_pyinstaller()
+    archive_path = create_release_archive(application_dir)
 
-    print(f"\nRelease directory: {application_dir}")
+    print(f"\nRelease archive: {archive_path}")
     return 0
 
 
